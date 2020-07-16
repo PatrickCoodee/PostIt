@@ -8,6 +8,67 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+    <style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+    </style>
     <title>Hello, world!</title>
   </head>
   <body>
@@ -18,8 +79,13 @@
         </h3>
       </a>
       <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search log" aria-label="Search">
-        <a href="#" class="btn btn-lg btn-info btn-modal"  data-backdrop="static" data-toggle="modal" data-target="#AddLogModal"><i class="fas fa-plus-circle"></i> </a>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search log" aria-label="Search" id="searchLog">
+        <label class="switch">
+          <input type="checkbox" id="hide-private">
+          <span class="slider round"></span>
+        </label>
+        <a href="#" class="btn btn-lg btn-info btn-modal mx-1"  data-backdrop="static" data-toggle="modal" data-target="#AddLogModal"><i class="fas fa-plus-circle"></i> </a>
+        <a href="#" class="btn btn-lg btn-danger text-dark" id="clear-logs-btn"><i class="fas fa-trash-alt"></i> Clear Logs</a>
       </form>
     </nav>
     <div class="container">
@@ -79,7 +145,7 @@
             </div>
             <div class="modal-footer view-log-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+             
             </div>
           </div>
         </div>
@@ -102,6 +168,7 @@
         
     </div>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.js"></script>
     <script src="https://kit.fontawesome.com/aef2eb60e0.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

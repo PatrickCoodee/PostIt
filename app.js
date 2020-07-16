@@ -1,6 +1,56 @@
 // storage
 const StorageCtrl = (() => {
   // storage goes here
+
+  return {
+    // get all logs from localStorage
+    getLogsFromStorage: () => {
+      
+      // check local storage if logs exist
+      let logs = localStorage.getItem('logs') ? JSON.parse(localStorage.getItem('logs')) : []
+
+      return logs
+    },
+    pushLogsToStorage: (logs) => {
+      localStorage.setItem('logs', JSON.stringify(logs))
+    },
+    addLogToStorage: (newLog) => {
+      const logs = StorageCtrl.getLogsFromStorage()
+      logs.push(newLog)
+
+      StorageCtrl.pushLogsToStorage(logs)
+    },
+    clearLogsFromStorage: () => {
+      localStorage.clear()
+    },
+    updateLogFromStorage: (title,isHidden,body) => {
+      const updateTimeStamp = moment().valueOf()
+      const logs = StorageCtrl.getLogsFromStorage()
+
+      logs.forEach(log => {
+        if (log.id === LogCtrl.getCurrentLog().id) {
+          log.title = title,
+          log.private = isHidden,
+          log.logdate = updateTimeStamp,
+          log.body = body
+        }
+      })
+
+      StorageCtrl.pushLogsToStorage(logs)
+    },
+    deleteLogFromStorage: (id) => {
+      const logs = StorageCtrl.getLogsFromStorage()
+
+      logs.forEach((log,index) => {
+        
+        if(log.id === id) {
+          logs.splice(index,1)
+        }
+      })
+
+      StorageCtrl.pushLogsToStorage(logs)
+    }
+  }
 })()
 
 
@@ -17,15 +67,7 @@ const LogCtrl = (() => {
   }
 
   const data = {
-    logs: [
-      {
-        id: 'asda',
-        title: 'This is pre entereed',
-        private: true,
-        body: 'This is the body',
-        logdate: 'now'
-      }
-    ],
+    logs: StorageCtrl.getLogsFromStorage(),
     currentLog: null
   }
 
@@ -88,6 +130,9 @@ const LogCtrl = (() => {
       })
 
     },
+    clearLogData: () => {
+      data.logs = []
+    },
     getLogs: () => {
       return data.logs
     },
@@ -106,9 +151,12 @@ const UICtrl = (() => {
     editSaveBtn: '.btn-edit-save',
     backBtn: '.btn-back',
     titleInput: '#log-title',
+    searchLog: '#searchLog',
     bodyInput: '#log-body',
     isHidden: '#hide-story',
+    clearBtn: '#clear-logs-btn',
     logList: '#log-list',
+    hideSlider: '#hide-private',
     viewTitle: '#view-log-title',
     viewBody: '#view-log-body',
     addStateTitle: '#add-log-title',
@@ -131,6 +179,14 @@ const UICtrl = (() => {
       }
     },
     addLogToUI: (log) => {
+      let color
+      // check if log is private
+      if (log.private) {
+        // set background color to dark
+        color = '#414a4c'  
+      } else {
+        color = randomColor()
+      }
 
       const div = document.createElement('div')
       const timeStamp = moment(log.logdate).format("MMMM Do YYYY, h:mm:ss a")
@@ -141,7 +197,7 @@ const UICtrl = (() => {
         
       div.innerHTML = `
       
-      <div class="card bg-secondary text-white">
+      <div class="card text-white" style="background-color:${color}">
         <div class="card-body">
           <h4 class="card-title text-capitalize font-weight-bold">${log.title}</h4>
           <span class="text-white">${timeStamp}</span>
@@ -161,9 +217,13 @@ const UICtrl = (() => {
        document.querySelector(UISelectors.bodyInput).value = ''
        document.querySelector(UISelectors.isHidden).checked = false
     },
-    showInitialState: () => {
-
+    showInitalState: () => {
       UICtrl.clearInputs()
+      UICtrl.showInitialButtonsState()
+      document.querySelector(UISelectors.searchLog).value = ''
+    },
+    showInitialButtonsState: () => {
+
       document.querySelector(UISelectors.addStateTitle).style.display = 'block'
       document.querySelector(UISelectors.addBtn).style.display = 'block'
 
@@ -174,7 +234,7 @@ const UICtrl = (() => {
     closeAddModal: () => {
       $('#AddLogModal').modal('hide');
       UICtrl.clearInputs()
-      UICtrl.showInitialState()
+      UICtrl.showInitialButtonsState()
       
     },
     showLogModal: () => {
@@ -257,7 +317,7 @@ const UICtrl = (() => {
 
       document.querySelector('.modal-content').insertBefore(errDiv,modalBody)
 
-      setTimeout(UICtrl.clearError, 3000)
+      setTimeout(UICtrl.clearError, 2000)
     },
     deleteLogFromUI: (id) => {
       const log = document.getElementById(id)
@@ -265,6 +325,34 @@ const UICtrl = (() => {
     },
     isInputValid: (uiInput) => {
       return uiInput.title === '' || uiInput.body === '' ? false : true
+    },
+    filterLogs: (text) => {
+      // get all log items from the DOM
+      let logs = document.querySelectorAll(UISelectors.logItem)
+
+      logs = Array.from(logs)
+
+      logs.forEach(log => {
+        const logTitle = log.childNodes[1].children[0].children[0].textContent
+
+        if(logTitle.toLowerCase().includes(text)) {
+          log.style.display = 'block'
+        } else {
+          log.style.display = 'none'
+        }
+      })
+
+    },
+    clearUILogs: () => {
+      // get all log items
+      const logList = document.querySelector(UISelectors.logList)
+
+      // while logList has a child, remove child
+      while(logList.firstChild) {
+        // remove firstChild
+        logList.removeChild(logList.firstChild)
+      }
+
     },
     viewLog: (log) => {
       // supply log data to info
@@ -280,7 +368,7 @@ const UICtrl = (() => {
 
 
 // Main controller
-const app = ((UICtrl, LogCtrl)=> {
+const app = ((UICtrl, LogCtrl,StorageCtrl)=> {
 
   const UISelectors = UICtrl.getSelectors()
 
@@ -298,6 +386,14 @@ const app = ((UICtrl, LogCtrl)=> {
 
     // delete button
     document.querySelector(UISelectors.deleteBtn).addEventListener('click', clickDeleteLog)
+
+    // search input 
+    document.querySelector(UISelectors.searchLog).addEventListener('keyup', filterUILogs)
+
+    // clear logs button
+    document.querySelector(UISelectors.clearBtn).addEventListener('click', clearLogs)
+
+    document.querySelector(UISelectors.hideSlider).addEventListener('click', toggleLogPrivacy)
   }
   
   const clickAddLog = (e) => {
@@ -314,6 +410,8 @@ const app = ((UICtrl, LogCtrl)=> {
       } else {
         // create a new log data
         const newLog = LogCtrl.addLog(input)
+
+        StorageCtrl.addLogToStorage(newLog)
 
         // add to UI
         UICtrl.addLogToUI(newLog)
@@ -365,6 +463,8 @@ const app = ((UICtrl, LogCtrl)=> {
     } else {
       // update current log
       const updatedLog = LogCtrl.updateLog(currentLog.title, currentLog.isHidden, currentLog.body)
+
+      StorageCtrl.updateLogFromStorage(currentLog)
     
       UICtrl.updateLogList(updatedLog)
     }
@@ -381,22 +481,45 @@ const app = ((UICtrl, LogCtrl)=> {
 
     UICtrl.deleteLogFromUI(itemToDelete.id)
 
+    StorageCtrl.deleteLogFromStorage(itemToDelete.id)
+
     UICtrl.closeAddModal()
     
   }
 
+  const filterUILogs = (e) => {
+    const text = e.target.value.toLowerCase()
+
+    // filter UI logs
+    UICtrl.filterLogs(text)
+  }
+
+  const clearLogs = (e) => {
+    e.preventDefault()
+
+    UICtrl.clearUILogs()
+
+    StorageCtrl.clearLogsFromStorage()
+
+    LogCtrl.clearLogData()
+  }
+
+  const toggleLogPrivacy = (e) => {
+    console.log(e.target.checked)
+  }
+
   return {
     init: () => {
-      console.log('Initializing Application.................')
+      console.log('Initializing Application...')
 
       // show initial state on loading
-      UICtrl.showInitialState()
+      UICtrl.showInitalState()
       const logs = LogCtrl.getLogs()
       UICtrl.populateLogList(logs)
       // load event listeners
       loadEventListeners()
     }
   }
-})(UICtrl,LogCtrl)
+})(UICtrl,LogCtrl,StorageCtrl)
 
 app.init()
