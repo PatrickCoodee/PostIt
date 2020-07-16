@@ -387,7 +387,7 @@ const app = ((UICtrl, LogCtrl)=> {
 
   return {
     init: () => {
-      console.log('Initializing Application..')
+      console.log('Initializing Application.................')
 
       // show initial state on loading
       UICtrl.showInitialState()
