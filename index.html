@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light justify-content-between">
+      <a class="navbar-brand" href="#">
+        <h3 class="font-weight-bold">
+          <i class="fas fa-book-dead"></i> Patrick's Daily Log
+        </h3>
+      </a>
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search log" aria-label="Search">
+        <a href="#" class="btn btn-lg btn-info btn-modal"  data-backdrop="static" data-toggle="modal" data-target="#AddLogModal"><i class="fas fa-plus-circle"></i> </a>
+      </form>
+    </nav>
+    <div class="container">
+
+
+      <!-- MODAL FOR ADDING/EDITING A LOG ENTRY  -->
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" id="AddLogModal" role="dialog" aria-labelledby="AddLogModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+
+            <!-- modal header -->
+            <div class="modal-header">
+              <h2 id="add-log-title" class="font-weight-light"><i class="fas fa-pencil-alt"></i> Todays Log</h2>
+              <h2 id="edit-log-title" class="font-weight-light"><i class="fas fa-pencil-alt"></i> Edit Log</h2>
+            </div>
+          
+            <!-- modal body -->
+            <div class="modal-body add-modal-body">
+              <form action="#">
+                <div class="form-group">
+                  <input type="text" class="form-control" name="log-title" id="log-title" placeholder="Log Name" >
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="hide-story" > 
+                  <label class="form-check-label" for="hide-story">
+                    Hide Story
+                  </label>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" id="log-body" rows="6" ></textarea>
+                </div>
+              </form>
+            </div>
+            <!-- modal footer -->
+            <div class="modal-footer">
+              <a  href="#" class="btn btn-back btn-secondary"><i class="fas fa-times"></i></a>
+              <a  href="#" class="btn btn-add btn-primary"><i class="fas fa-save"></i> Add Log</a>
+              <a href="#" class="btn btn-delete btn-danger"><i class="fas fa-trash-alt"></i> Delete Log</a>
+              <a href="#" class="btn btn-edit-save btn-warning">Update Log</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL FOR VIEWING INDIVIDUAL LOG -->
+      <div class="modal fade" id="viewLogModal" tabindex="-1" role="dialog" aria-labelledby="viewLogModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="view-log-title">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="view-log-body">
+              
+            </div>
+            <div class="modal-footer view-log-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row" id="log-list">
+       <!-- <div class="col-sm-4 my-3">
+        <div class="card bg-secondary text-white">
+          <div class="card-body ">
+            <h4 class="card-title text-capitalize font-weight-bold">Story</h4>
+            
+              <div class="py-2">
+                <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
+                <a href="#" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+              </div>
+            </div>
+        </div>
+       </div> -->
+        
+    </div>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://kit.fontawesome.com/aef2eb60e0.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.2.0/uuidv4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
